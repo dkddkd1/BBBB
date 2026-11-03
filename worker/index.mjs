@@ -11,9 +11,9 @@ import { fetchRestaurants } from "./stores.mjs";
 const POLL_MS = 5000;
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const key = process.env.SUPABASE_SECRET_KEY;
 if (!url || !key) {
-  console.error(".env.local에 NEXT_PUBLIC_SUPABASE_URL과 SUPABASE_SERVICE_ROLE_KEY를 넣어주세요.");
+  console.error(".env.local에 NEXT_PUBLIC_SUPABASE_URL과 SUPABASE_SECRET_KEY를 넣어주세요.");
   process.exit(1);
 }
 const db = createClient(url, key, { auth: { persistSession: false } });

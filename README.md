@@ -105,7 +105,7 @@
 
 ### 1. Supabase
 1. 새 프로젝트를 만들고 SQL Editor에서 [supabase/schema.sql](supabase/schema.sql)을 실행합니다.
-2. Project Settings > API에서 URL, anon key, service_role key를 복사합니다.
+2. Project Settings > API Keys에서 URL, publishable key(`sb_publishable_...`), secret key(`sb_secret_...`)를 복사합니다.
 
 ### 2. 공공데이터포털 인증키
 [소상공인시장진흥공단_상가(상권)정보](https://www.data.go.kr/data/15012005/openapi.do)에서 활용신청을 하면 인증키가 바로 발급됩니다. 키가 실제로 동작하기까지 1시간 정도 걸릴 수 있습니다.
@@ -129,4 +129,4 @@ npm run worker
 특정 구획 하나만 바로 수집하려면 `npm run worker -- 연남동`. aside 원본 응답은 `worker/debug/`에 저장됩니다.
 
 ### 6. Vercel 배포
-GitHub 저장소를 Vercel에 연결하고 환경 변수 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL`만 넣습니다. `SUPABASE_SERVICE_ROLE_KEY`는 Vercel에 넣지 않습니다.
+GitHub 저장소를 Vercel에 연결하고 환경 변수 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL`만 넣습니다. `SUPABASE_SECRET_KEY`는 Vercel에 넣지 않습니다.

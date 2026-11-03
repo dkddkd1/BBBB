@@ -9,7 +9,7 @@ flowchart LR
     U[사용자 브라우저] -->|페이지, /api/search| V[Vercel<br/>Next.js]
     V -->|자연어 해석| G[Gemini API]
     U -->|읽기, request_region, set_bplpay<br/>Realtime 구독| S[(Supabase<br/>Postgres)]
-    W[내 PC 수집 워커<br/>worker/] -->|대기열 확인, 결과 저장<br/>service_role| S
+    W[내 PC 수집 워커<br/>worker/] -->|대기열 확인, 결과 저장<br/>secret 키| S
     W -->|경계 폴리곤 수집| A[aside 브라우저] --> N[네이버지도]
     W -->|폴리곤 안 음식점 조회| P[공공데이터포털<br/>소상공인 상가정보]
     W -.->|폴리곤 대체| O[OpenStreetMap<br/>Nominatim]
@@ -94,7 +94,7 @@ sequenceDiagram
 ├── components/
 │   └── MapView.tsx           # Leaflet 지도, 폴리곤, 마커, 팝업 버튼
 ├── lib/
-│   ├── supabase.ts           # 브라우저용 Supabase 클라이언트 (anon 키)
+│   ├── supabase.ts           # 브라우저용 Supabase 클라이언트 (publishable 키)
 │   └── types.ts              # Region, Restaurant, SearchIntent 타입
 ├── worker/                   # 내 PC에서만 실행 (Vercel에 배포되지 않음)
 │   ├── index.mjs             # 대기열 처리 루프, 저장
@@ -152,8 +152,8 @@ erDiagram
 
 | 대상 | 권한 |
 | --- | --- |
-| 익명 사용자 (anon 키) | 모든 테이블 읽기. 쓰기는 `request_region`, `set_bplpay` 함수로만 가능 |
-| 수집 워커 (service_role 키) | 전체 쓰기. 내 PC의 `.env.local`에만 보관하고 Vercel에는 넣지 않음 |
+| 익명 사용자 (publishable 키) | 모든 테이블 읽기. 쓰기는 `request_region`, `set_bplpay` 함수로만 가능 |
+| 수집 워커 (secret 키) | 전체 쓰기. 내 PC의 `.env.local`에만 보관하고 Vercel에는 넣지 않음 |
 | Gemini 키 | Vercel 서버에만 보관. 브라우저에는 노출되지 않음 |
 
 - 두 함수는 `security definer`로 실행됩니다. 입력값을 검사합니다: 구획 이름 40자 이하, 상태값은 `yes`/`no`만 허용.
@@ -168,16 +168,16 @@ erDiagram
 | 네이버지도 (aside 경유) | 구획 경계 폴리곤 | 불필요 (aside 로그인) | 이용약관 확인 필요 |
 | 소상공인 상가(상권)정보 | 식당 목록 | `DATA_GO_KR_KEY` | 무료. 분기 단위로 갱신 |
 | Gemini | 자연어 검색 해석 | `GEMINI_API_KEY` | 모델은 `GEMINI_MODEL`로 변경 |
-| Supabase | DB, 실시간 알림 | URL, anon, service_role | |
+| Supabase | DB, 실시간 알림 | URL, publishable, secret | |
 
 ## 7. 환경 변수
 
 | 변수 | 웹앱 (Vercel) | 수집 워커 (내 PC) |
 | --- | :---: | :---: |
 | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | ✅ |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | ✅ | |
 | `GEMINI_API_KEY`, `GEMINI_MODEL` | ✅ | |
-| `SUPABASE_SERVICE_ROLE_KEY` | ❌ 넣지 않음 | ✅ |
+| `SUPABASE_SECRET_KEY` | ❌ 넣지 않음 | ✅ |
 | `DATA_GO_KR_KEY` | | ✅ |
 | `ASIDE_BIN`, `ASIDE_TIMEOUT_MS` | | ✅ (선택) |
 
