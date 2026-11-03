@@ -1,0 +1,82 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #666;
+  --line: #ddd;
+  --accent: #2b6cff;
+  --neon: #39ff14;
+  --pin: #ff7a45;
+  --pin-no: #9e9e9e;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.app { display: flex; flex-direction: column; height: 100dvh; }
+
+.topbar {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 10px 16px; border-bottom: 1px solid var(--line);
+  z-index: 1000; background: var(--bg);
+}
+.search { display: flex; gap: 8px; }
+.search input {
+  flex: 1; min-width: 0; padding: 10px 12px; font-size: 16px;
+  border: 1px solid var(--line); border-radius: 8px;
+}
+.search button {
+  padding: 0 16px; font-size: 15px; border: 0; border-radius: 8px;
+  background: var(--accent); color: #fff; cursor: pointer;
+}
+.search button:disabled { opacity: .5; cursor: default; }
+.status { font-size: 13px; color: var(--muted); min-height: 18px; }
+.status.error { color: #d33; }
+
+.legend { display: flex; gap: 12px; font-size: 12px; color: var(--muted); align-items: center; flex-wrap: wrap; }
+.legend .pin { position: static; display: inline-block; vertical-align: middle; margin-right: 4px; }
+
+.map { flex: 1; min-height: 0; }
+
+/* 식당 마커 */
+.pin-wrap { background: none; border: 0; }
+.pin {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--pin); border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.35);
+}
+.pin.no { background: var(--pin-no); }
+.pin.yes {
+  width: 20px; height: 20px;
+  border: 4px solid var(--neon);
+  animation: neon-blink .8s ease-in-out infinite;
+}
+@keyframes neon-blink {
+  0%, 100% {
+    border-color: var(--neon);
+    box-shadow: 0 0 6px 2px var(--neon), 0 0 14px 4px var(--neon);
+  }
+  50% {
+    border-color: rgba(57, 255, 20, .15);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pin.yes { animation-duration: 2s; }
+}
+
+/* 팝업 */
+.popup h3 { margin: 0 0 4px; font-size: 15px; }
+.popup p { margin: 0 0 2px; font-size: 12px; color: var(--muted); }
+.popup .state { margin: 6px 0; font-size: 12px; }
+.popup .buttons { display: flex; gap: 6px; margin-top: 8px; }
+.popup .buttons button {
+  flex: 1; padding: 8px 10px; font-size: 13px; border-radius: 6px;
+  border: 1px solid var(--line); background: #fff; cursor: pointer; white-space: nowrap;
+}
+.popup .buttons button.yes.active { background: var(--neon); border-color: #22b80a; font-weight: 600; }
+.popup .buttons button.no.active { background: var(--pin-no); color: #fff; border-color: #777; font-weight: 600; }
